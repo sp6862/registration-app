@@ -9,8 +9,4 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Clone the Git repository with the correct branch name
-                git branch: 'main', url: 'https://github.com/sp6862/registration-app.git'
-            }
-        }
-        stage('Build') {
-            st
+                git branch: 'main', url: 'https://github
