@@ -9,4 +9,38 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Clone the Git repository with the correct branch name
-                git branch: 'main'
+                git branch: 'main', url: 'https://github.com/sp6862/registration-app.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                dir("${env.PROJECT_DIR}") {
+                    sh 'mvn clean install'
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                dir("${env.PROJECT_DIR}") {
+                    sh 'mvn test'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            // Archive artifacts (e.g., JAR files) and test results
+            archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
+            junit '**/target/surefire-reports/*.xml'
+        }
+        success {
+            // Notify success
+            echo 'Build and tests succeeded!'
+        }
+        failure {
+            // Notify failure
+            echo 'Build or tests failed!'
+        }
+    }
+}
